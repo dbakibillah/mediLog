@@ -1,0 +1,27 @@
+[
+    {
+        "img": "https://i.ibb.co/NjxSpsz/hospital-finder.jpg",
+        "name": "Doctor Appointments",
+        "shortDescription": "Book appointments with trusted doctors easily."
+    },
+    {
+        "img": "https://i.ibb.co/NjxSpsz/hospital-finder.jpg",
+        "name": "Hospital Finder",
+        "shortDescription": "Find top-rated hospitals with comprehensive care."
+    },
+    {
+        "img": "https://i.ibb.co/NjxSpsz/hospital-finder.jpg",
+        "name": "Medical History",
+        "shortDescription": "Securely access and manage your medical records."
+    },
+    {
+        "img": "https://i.ibb.co/h75fxq7/medical-tests.jpg",
+        "name": "Lab Tests",
+        "shortDescription": "Get accurate diagnostic tests done at your convenience."
+    },
+    {
+        "img": "https://i.ibb.co/NjxSpsz/hospital-finder.jpg",
+        "name": "Emergency Services",
+        "shortDescription": "Quick and reliable emergency medical assistance."
+    }
+]
