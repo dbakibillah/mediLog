@@ -26,7 +26,7 @@ const OurServices = () => {
                     {services.map((service) => (
                         <div
                             key={service._id}
-                            className="bg-white dark:bg-gray-800 mx-2 rounded-lg p-5 w-1/3 cursor-pointer hover:shadow-xl transition duration-300 dark:hover:shadow-gray-700"
+                            className="bg-white mx-2 rounded-lg p-5 w-1/3 cursor-pointer hover:shadow-xl transition duration-300 dark:hover:shadow-gray-700"
                         >
                             <img
                                 src={service.img}
