@@ -29,11 +29,14 @@ To set up `mediLog` locally, follow the steps below:
    git clone https://github.com/your-username/medilog.git
 
 2. **Navigate to the project folder**:
+   ```bash
     cd medilog
 
 3. **Install dependencies**:
-    npm install
+   ```bash
+   npm install
 
-4. **Run the application**:
+5. **Run the application**:
+   ```bash
     npm start
 
