@@ -30,6 +30,15 @@ const Navbar = () => {
                     Diagnosis
                 </NavLink>
             </li>
+            <li>
+                <NavLink
+                    to="/ordertests"
+                    className={({ isActive }) =>
+                        isActive ? "text-blue-600 font-semibold" : "hover:text-blue-500 transition"
+                    }>
+                    Order Tests
+                </NavLink>
+            </li>
         </>
     );
 

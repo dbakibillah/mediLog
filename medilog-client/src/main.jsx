@@ -10,6 +10,7 @@ import Root from './routes/Root';
 import Home from './pages/common/Home';
 import Login from './pages/common/Login';
 import Register from './pages/common/Register';
+import OrderTests from './pages/orderTest/OrderTests';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <Register />,
+      },
+      {
+        path: "/ordertests",
+        element: <OrderTests />,
       }
     ]
   },

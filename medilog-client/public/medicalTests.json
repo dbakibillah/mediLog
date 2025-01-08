@@ -1,0 +1,128 @@
+[
+    {
+        "testName": "CBC",
+        "details": "Complete Blood Count - measures various components of blood, including red cells, white cells, and platelets.",
+        "price": 500,
+        "sampleType": "Blood",
+        "resultTime": "24 hours",
+        "preparation": "No special preparation required.",
+        "recommendedFor": "General health check-up, infection, anemia."
+    },
+    {
+        "testName": "Urine R/M/E",
+        "details": "Urine Routine, Microscopic Examination - analyzes urine sample for various substances and cells.",
+        "price": 300,
+        "sampleType": "Urine",
+        "resultTime": "6 hours",
+        "preparation": "Morning urine sample preferred.",
+        "recommendedFor": "Urinary tract infections, kidney disease."
+    },
+    {
+        "testName": "Serum Creatinine",
+        "details": "Measures creatinine level in blood, indicating kidney function.",
+        "price": 400,
+        "sampleType": "Blood",
+        "resultTime": "24 hours",
+        "preparation": "Avoid meat-heavy meal before the test.",
+        "recommendedFor": "Kidney function monitoring."
+    },
+    {
+        "testName": "CBC with ESR",
+        "details": "Complete Blood Count with Erythrocyte Sedimentation Rate - measures inflammation in the body along with blood components.",
+        "price": 600,
+        "sampleType": "Blood",
+        "resultTime": "24 hours",
+        "preparation": "No special preparation required.",
+        "recommendedFor": "Inflammatory conditions, infections."
+    },
+    {
+        "testName": "Dengue NS1 Ag",
+        "details": "Detects Dengue virus non-structural protein 1 in the blood, early diagnosis of Dengue.",
+        "price": 1000,
+        "sampleType": "Blood",
+        "resultTime": "12 hours",
+        "preparation": "No special preparation required.",
+        "recommendedFor": "Suspected Dengue infection."
+    },
+    {
+        "testName": "TSH",
+        "details": "Thyroid Stimulating Hormone test - evaluates thyroid gland function.",
+        "price": 400,
+        "sampleType": "Blood",
+        "resultTime": "24 hours",
+        "preparation": "Fasting preferred but not required.",
+        "recommendedFor": "Thyroid disorders."
+    },
+    {
+        "testName": "Serum Electrolytes",
+        "details": "Measures levels of electrolytes like sodium, potassium, and chloride in the blood.",
+        "price": 500,
+        "sampleType": "Blood",
+        "resultTime": "24 hours",
+        "preparation": "Fasting may be required as advised.",
+        "recommendedFor": "Electrolyte imbalance, dehydration."
+    },
+    {
+        "testName": "RBS",
+        "details": "Random Blood Sugar - measures blood glucose level at any time of the day.",
+        "price": 300,
+        "sampleType": "Blood",
+        "resultTime": "2 hours",
+        "preparation": "No special preparation required.",
+        "recommendedFor": "Diabetes monitoring."
+    },
+    {
+        "testName": "SGPT (ALT)",
+        "details": "Serum Glutamic Pyruvic Transaminase - measures liver enzyme levels.",
+        "price": 400,
+        "sampleType": "Blood",
+        "resultTime": "24 hours",
+        "preparation": "Fasting may be required as advised.",
+        "recommendedFor": "Liver function assessment."
+    },
+    {
+        "testName": "Lipid Profile",
+        "details": "Measures various fats in the blood, including cholesterol and triglycerides.",
+        "price": 800,
+        "sampleType": "Blood",
+        "resultTime": "24 hours",
+        "preparation": "12-hour fasting required.",
+        "recommendedFor": "Heart disease risk assessment."
+    },
+    {
+        "testName": "HbA1C",
+        "details": "Glycated Hemoglobin - measures average blood sugar levels over the past 2-3 months.",
+        "price": 600,
+        "sampleType": "Blood",
+        "resultTime": "24 hours",
+        "preparation": "No special preparation required.",
+        "recommendedFor": "Diabetes management."
+    },
+    {
+        "testName": "Urine for C/S",
+        "details": "Urine Culture and Sensitivity - detects bacteria in urine and antibiotic sensitivity.",
+        "price": 700,
+        "sampleType": "Urine",
+        "resultTime": "48-72 hours",
+        "preparation": "Morning midstream urine sample preferred.",
+        "recommendedFor": "Persistent urinary tract infections."
+    },
+    {
+        "testName": "FBS",
+        "details": "Fasting Blood Sugar - measures blood glucose level after fasting.",
+        "price": 300,
+        "sampleType": "Blood",
+        "resultTime": "2 hours",
+        "preparation": "10-12 hours fasting required.",
+        "recommendedFor": "Diabetes diagnosis."
+    },
+    {
+        "testName": "Widal Test",
+        "details": "Detects typhoid fever by measuring antibodies against Salmonella bacteria.",
+        "price": 500,
+        "sampleType": "Blood",
+        "resultTime": "24 hours",
+        "preparation": "No special preparation required.",
+        "recommendedFor": "Suspected typhoid fever."
+    }
+]
