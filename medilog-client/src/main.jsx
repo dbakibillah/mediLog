@@ -11,6 +11,7 @@ import Home from './pages/common/Home';
 import Login from './pages/common/Login';
 import Register from './pages/common/Register';
 import OrderTests from './pages/orderTest/OrderTests';
+import DoctorDetails from './pages/doctors/DoctorDetails';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "/ordertests",
         element: <OrderTests />,
+      },
+      {
+        path:"/doctordetails",
+        element:<DoctorDetails/>
       }
     ]
   },
