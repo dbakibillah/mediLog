@@ -10,6 +10,7 @@ import Root from './routes/Root';
 import Home from './pages/common/Home';
 import Login from './pages/common/Login';
 import Register from './pages/common/Register';
+import AuthProvider from './providers/AuthProviders';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,7 +35,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HelmetProvider>
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </HelmetProvider>
   </StrictMode>,
 )
