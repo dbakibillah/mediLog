@@ -8,7 +8,7 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 const Register = () => {
     const navigate = useNavigate();
-    const { createUser, signInUser } = useContext(AuthContext);
+    const { createUser, signInUser, updateUserProfile } = useContext(AuthContext);
 
     const [passwordError, setPasswordError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +19,7 @@ const Register = () => {
         const name = event.target.name.value.trim();
         const email = event.target.email.value.trim();
         const password = event.target.password.value.trim();
-        
+
         // Password validation checks
         if (password.length < 6) {
             setPasswordError("Password must be at least 6 characters long.");
@@ -65,7 +65,7 @@ const Register = () => {
                 text: "Registration successful and logged in!",
                 icon: "success",
             });
-
+            await updateUserProfile({ displayName: name });
             navigate("/"); // Redirect to the homepage after successful login
         } catch (error) {
             console.error("Error during registration:", error);

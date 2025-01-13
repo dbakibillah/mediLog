@@ -132,6 +132,53 @@ app.post("/users", (req, res) => {
   });
 });
 
+// GET API for /doctors
+app.get("/doctors", (req, res) => {
+  const query = "SELECT * FROM doctors";
+  database.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching doctors:", err);
+      return res.status(500).json({ error: "Failed to fetch doctors" });
+    }
+    res.json(results);
+  });
+});
+
+// GET API for /doctors/:id
+app.get("/doctors/:id", (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: "Doctor ID is required" });
+  }
+
+  const query = "SELECT * FROM doctors WHERE id = ?";
+  database.query(query, [id], (err, results) => {
+    if (err) {
+      console.error("Error fetching doctor details:", err);
+      return res.status(500).json({ error: "Failed to fetch doctor details" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    res.json(results[0]);
+  });
+});
+
+// Get API for All Medical Tests
+app.get("/medicaltests", (req, res) => {
+  const query = "SELECT * FROM medicaltests";
+  database.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching medical tests:", err);
+      return res.status(500).json({ error: "Failed to fetch medical tests" });
+    }
+    res.json(results);
+  });
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
