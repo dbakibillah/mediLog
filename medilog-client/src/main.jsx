@@ -19,6 +19,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import Services from './pages/common/Services';
 
 const queryClient = new QueryClient()
 const router = createBrowserRouter([
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "/consultation",
         element: <Consultation />,
+      },
+      {
+        path: "/services",
+        element: <Services />,
       },
       {
         path: "/doctors/:id",

@@ -199,6 +199,53 @@ app.get("/medicaltests", (req, res) => {
   });
 });
 
+
+
+
+
+//get api for package
+app.get("/packages", (req, res) => {
+  const { category, page = 1, limit = 8 } = req.query;
+
+  if (!category) {
+    return res.status(400).json({ error: "Category is required (children/adult)" });
+  }
+
+  const offset = (page - 1) * limit;
+
+  const query = `SELECT * FROM health_packages WHERE category = ? LIMIT ? OFFSET ?`;
+  const countQuery = `SELECT COUNT(*) AS total FROM health_packages WHERE category = ?`;
+
+  // Fetching the health packages
+  database.query(query, [category, limit, offset], (err, results) => {
+    if (err) {
+      console.error("Error fetching health packages:", err);
+      return res.status(500).json({ error: "Failed to fetch health packages" });
+    }
+
+    // Fetching the total count of packages for pagination
+    database.query(countQuery, [category], (err, countResult) => {
+      if (err) {
+        console.error("Error fetching total package count:", err);
+        return res.status(500).json({ error: "Failed to fetch total package count" });
+      }
+
+      const totalPackages = countResult[0].total;
+      const totalPages = Math.ceil(totalPackages / limit);
+
+      res.json({
+        packages: results,
+        total: totalPackages,
+        totalPages: totalPages,
+        currentPage: parseInt(page),
+      });
+    });
+  });
+});
+
+
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
