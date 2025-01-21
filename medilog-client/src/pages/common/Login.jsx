@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 import { AuthContext } from "../../providers/AuthProviders";
 import Swal from "sweetalert2";
 import { useContext, useState } from "react";
+import axios from "axios";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -15,28 +16,45 @@ const Login = () => {
     const [passwordError, setPasswordError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleGoogleSignIn = () => {
-        googleSignIn()
-            .then((result) => {
-                setUser(result.user);
-                const redirectPath = location.state?.from?.pathname || "/";
-                navigate(redirectPath, { replace: true });
+    const handleGoogleSignIn = async () => {
+        try {
+            const result = await googleSignIn();
+            const user = result.user;
+            const { email, displayName } = user;
+
+            // Check if user already exists
+            const response = await axios.get(`http://localhost:8081/users?email=${email}`);
+            if (response.data.exists) {
                 Swal.fire({
                     title: "Success!",
                     text: "Logged in successfully with Google!",
                     icon: "success",
                 });
-            })
-            .catch((err) => {
+            } else {
+                // Register new user
+                const newUser = { name: displayName, email };
+                await axios.post("http://localhost:8081/users", newUser);
                 Swal.fire({
-                    title: "Error!",
-                    text: err.message,
-                    icon: "error",
+                    title: "Welcome!",
+                    text: "Account created successfully with Google!",
+                    icon: "success",
                 });
+            }
+
+            // Set user and navigate
+            setUser(user);
+            const redirectPath = location.state?.from?.pathname || "/";
+            navigate(redirectPath, { replace: true });
+        } catch (err) {
+            Swal.fire({
+                title: "Error!",
+                text: err.message,
+                icon: "error",
             });
+        }
     };
 
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
 
         // Password validation
@@ -63,24 +81,23 @@ const Login = () => {
 
         setPasswordError(""); // Clear error if validation passes
 
-        signInUser(email, password)
-            .then((result) => {
-                setUser(result.user);
-                const redirectPath = location.state?.from?.pathname || "/";
-                navigate(redirectPath, { replace: true });
-                Swal.fire({
-                    title: "Success!",
-                    text: "Logged in successfully!",
-                    icon: "success",
-                });
-            })
-            .catch((err) => {
-                Swal.fire({
-                    title: "Error!",
-                    text: err.message,
-                    icon: "error",
-                });
+        try {
+            const result = await signInUser(email, password);
+            setUser(result.user);
+            const redirectPath = location.state?.from?.pathname || "/";
+            navigate(redirectPath, { replace: true });
+            Swal.fire({
+                title: "Success!",
+                text: "Logged in successfully!",
+                icon: "success",
             });
+        } catch (err) {
+            Swal.fire({
+                title: "Error!",
+                text: err.message,
+                icon: "error",
+            });
+        }
     };
 
     return (

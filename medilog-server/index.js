@@ -134,13 +134,33 @@ app.post("/users", (req, res) => {
 
 // GET API for /doctors
 app.get("/doctors", (req, res) => {
-  const query = "SELECT * FROM doctors";
-  database.query(query, (err, results) => {
+  const page = parseInt(req.query._page) || 1;
+  const limit = parseInt(req.query._limit) || 10;
+  const offset = (page - 1) * limit;
+
+  const query = `SELECT * FROM doctors LIMIT ? OFFSET ?`;
+  database.query(query, [limit, offset], (err, results) => {
     if (err) {
       console.error("Error fetching doctors:", err);
       return res.status(500).json({ error: "Failed to fetch doctors" });
     }
-    res.json(results);
+    const countQuery = "SELECT COUNT(*) AS total FROM doctors";
+    database.query(countQuery, (err, countResult) => {
+      if (err) {
+        console.error("Error fetching total doctor count:", err);
+        return res
+          .status(500)
+          .json({ error: "Failed to fetch total doctor count" });
+      }
+      const totalDoctors = countResult[0].total;
+      const totalPages = Math.ceil(totalDoctors / limit);
+      res.json({
+        doctors: results,
+        total: totalDoctors,
+        totalPages: totalPages,
+        currentPage: page,
+      });
+    });
   });
 });
 
