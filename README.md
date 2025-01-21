@@ -3,6 +3,7 @@
 **mediLog** is a healthcare management system designed to streamline patient care and hospital management. The platform allows patients, doctors, and administrators to interact efficiently, maintaining medical records, booking appointments, ordering medicines, and more.
 
 ## Live Link: https://medilog-458b6.web.app/
+## server side: https://medilog-server.vercel.app/
 
 ## Features
 
