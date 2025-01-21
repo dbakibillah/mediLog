@@ -135,6 +135,13 @@ const Navbar = () => {
                                         </span>
                                     </li>
                                     <li>
+                                        <Link to="/dashboard"
+                                            className="btn btn-ghost"
+                                        >
+                                            Dashboard
+                                        </Link>
+                                    </li>
+                                    <li>
                                         <button
                                             onClick={handleLogout}
                                             className="btn btn-ghost"

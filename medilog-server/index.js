@@ -199,6 +199,67 @@ app.get("/medicaltests", (req, res) => {
   });
 });
 
+// POST API for Appointments
+// POST API for /appointments
+app.post("/appointments", (req, res) => {
+  const {
+    patientName,
+    patientEmail,
+    doctorId,
+    doctorName,
+    hospitalName,
+    consultationDate,
+    consultationTime,
+    disease,
+    additionalNotes,
+    status = "pending",
+  } = req.body;
+
+  // Validate required fields
+  if (
+    !patientName ||
+    !doctorId ||
+    !consultationDate ||
+    !consultationTime ||
+    !disease
+  ) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  // Query to insert the appointment into the database
+  const query = `
+    INSERT INTO appointments 
+      (patient_name, patient_email, doctor_id, doctor_name, hospital_name, consultation_date, consultation_time, disease, additional_notes, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+  const values = [
+    patientName,
+    patientEmail,
+    doctorId,
+    doctorName,
+    hospitalName,
+    consultationDate,
+    consultationTime,
+    disease,
+    additionalNotes,
+    status,
+  ];
+
+  // Execute the query
+  database.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error inserting appointment:", err);
+      return res.status(500).json({ error: "Failed to create appointment" });
+    }
+
+    // Send success response
+    res.status(201).json({
+      message: "Appointment created successfully",
+      appointmentId: result.insertId,
+    });
+  });
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
