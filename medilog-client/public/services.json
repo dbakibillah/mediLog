@@ -1,0 +1,163 @@
+{
+    "packages": [
+      {
+        "name": "Basic Health Check for Women (Below 40)",
+        "description": "A basic health check for women under 40, including essential consultations and diagnostic tests.",
+        "price": 149.99,
+        "rating": 4.5,
+        "imgUrl": "https://example.com/images/basic_health_check_women.jpg",
+        "category": "adult",
+        "consultation": {
+          "name": "Consultation",
+          "doctors": [
+            "Family Medicine Doctor",
+            "Obstetrics & Gynecology Doctor"
+          ]
+        },
+        "diagnosis": {
+          "name": "Diagnosis",
+          "tests": [
+            "Complete Blood Count",
+            "ECG",
+            "Glucose - Fasting",
+            "Iron Profile",
+            "Lipid Profile",
+            "Thyroid Function Test"
+          ]
+        }
+      },
+      {
+        "name": "Comprehensive Health Check for Women (Below 40)",
+        "description": "A comprehensive health check for women under 40, including full consultations and diagnostic tests.",
+        "price": 249.99,
+        "rating": 4.8,
+        "imgUrl": "https://example.com/images/comprehensive_health_check_women.jpg",
+        "category": "adult",
+        "consultation": {
+          "name": "Consultation",
+          "doctors": [
+            "Family Medicine Doctor",
+            "Obstetrics & Gynecology Doctor",
+            "Nutritionist"
+          ]
+        },
+        "diagnosis": {
+          "name": "Diagnosis",
+          "tests": [
+            "Complete Blood Count",
+            "ECG",
+            "Glucose - Fasting",
+            "Hemoglobin-A1c",
+            "Iron Profile",
+            "Lipid Profile",
+            "Liver Function Test",
+            "Renal Function Test",
+            "Thyroid Function Test",
+            "Ultrasound - Whole Abdomen",
+            "Urine Routine Microscopic Examination",
+            "X-Ray - Chest PA View"
+          ]
+        }
+      },
+      {
+        "name": "Health Check for Women (40 and Above)",
+        "description": "A tailored health check for women over 40, including specialized consultations and comprehensive diagnostics.",
+        "price": 349.99,
+        "rating": 4.9,
+        "imgUrl": "https://example.com/images/health_check_women_40_plus.jpg",
+        "category": "adult",
+        "consultation": {
+          "name": "Consultation",
+          "doctors": [
+            "Family Medicine Doctor",
+            "Obstetrics & Gynecology Doctor",
+            "Endocrinologist",
+            "Cardiologist"
+          ]
+        },
+        "diagnosis": {
+          "name": "Diagnosis",
+          "tests": [
+            "Complete Blood Count",
+            "ECG",
+            "Glucose - Fasting",
+            "Hemoglobin-A1c",
+            "Iron Profile",
+            "Lipid Profile",
+            "Liver Function Test",
+            "Renal Function Test",
+            "Thyroid Function Test",
+            "Ultrasound - Whole Abdomen",
+            "Urine Routine Microscopic Examination",
+            "X-Ray - Chest PA View",
+            "Bone Density Test",
+            "Mammogram"
+          ]
+        }
+      },
+      {
+        "name": "Men's Health Check (40 and Above)",
+        "description": "A specialized health check for men over 40, with a focus on cardiovascular, hormonal, and general wellness.",
+        "price": 299.99,
+        "rating": 4.6,
+        "imgUrl": "https://example.com/images/mens_health_check_40_plus.jpg",
+        "category": "adult",
+        "consultation": {
+          "name": "Consultation",
+          "doctors": [
+            "Family Medicine Doctor",
+            "Cardiologist",
+            "Endocrinologist"
+          ]
+        },
+        "diagnosis": {
+          "name": "Diagnosis",
+          "tests": [
+            "Complete Blood Count",
+            "ECG",
+            "Glucose - Fasting",
+            "Hemoglobin-A1c",
+            "Lipid Profile",
+            "Liver Function Test",
+            "Renal Function Test",
+            "Thyroid Function Test",
+            "Ultrasound - Whole Abdomen",
+            "Urine Routine Microscopic Examination",
+            "X-Ray - Chest PA View",
+            "Prostate-Specific Antigen (PSA)",
+            "Stress Test"
+          ]
+        }
+      },
+      {
+        "name": "Pregnancy Health Check",
+        "description": "A comprehensive health check for pregnant women, including essential consultations and diagnostic tests.",
+        "price": 249.99,
+        "rating": 4.7,
+        "imgUrl": "https://example.com/images/pregnancy_health_check.jpg",
+        "category": "adult",
+        "consultation": {
+          "name": "Consultation",
+          "doctors": [
+            "Obstetrics & Gynecology Doctor",
+            "Family Medicine Doctor"
+          ]
+        },
+        "diagnosis": {
+          "name": "Diagnosis",
+          "tests": [
+            "Complete Blood Count",
+            "Glucose - Fasting",
+            "Hemoglobin-A1c",
+            "Iron Profile",
+            "Lipid Profile",
+            "Thyroid Function Test",
+            "Ultrasound - Pregnancy Scan",
+            "Urine Routine Microscopic Examination",
+            "X-Ray - Chest PA View"
+          ]
+        }
+      }
+    ]
+  }
+  

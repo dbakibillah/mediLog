@@ -20,6 +20,8 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import Dashboard from './dashboard/Dashboard';
+import Services from './pages/common/Services';
+
 
 const queryClient = new QueryClient()
 const router = createBrowserRouter([
@@ -48,6 +50,10 @@ const router = createBrowserRouter([
         element: <Consultation />,
       },
       {
+        path: "/services",
+        element: <Services />,
+      },
+      {
         path: "/doctors/:id",
         element: <DoctorDetails />
       }
@@ -58,7 +64,7 @@ const router = createBrowserRouter([
     element: <Dashboard />,
     children: [
       {
-        
+
       }
     ]
   }

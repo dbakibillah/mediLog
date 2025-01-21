@@ -199,7 +199,6 @@ app.get("/medicaltests", (req, res) => {
   });
 });
 
-// POST API for Appointments
 // POST API for /appointments
 app.post("/appointments", (req, res) => {
   const {

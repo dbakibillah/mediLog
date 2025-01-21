@@ -46,11 +46,11 @@ const Navbar = () => {
             </li>
             <li>
                 <NavLink
-                    to="/diagonstic"
+                    to="/services"
                     className={({ isActive }) =>
                         isActive ? "text-blue-600 font-semibold" : "hover:text-blue-500 transition"
                     }>
-                    Diagnosis
+                    Services
                 </NavLink>
             </li>
             <li>
