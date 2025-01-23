@@ -9,22 +9,29 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = process.env.PORT || 8081;
 
-// if (!process.env.ACCESS_TOKEN) {
-//   throw new Error("ACCESS_TOKEN is not defined in environment variables");
-// }
+if (!process.env.ACCESS_TOKEN) {
+  throw new Error("ACCESS_TOKEN is not defined in environment variables");
+}
 const JWT_SECRET = process.env.ACCESS_TOKEN;
 
 // Middleware
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://medilog-458b6.web.app"],
+    credentials: true, // Allow cookies to be sent
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow these HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"], // Allow these headers
+  })
+);
 app.use(cookieParser());
 app.use(bodyParser.json());
 
 // Database connection
 const database = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "medilog",
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "medilog",
 });
 
 database.connect((err) => {
@@ -49,38 +56,38 @@ app.get("/", (req, res) => {
 });
 
 // POST API for /jwt
-// app.post("/jwt", (req, res) => {
-//   const { email } = req.body;
+app.post("/jwt", (req, res) => {
+  const { email } = req.body;
 
-//   if (!email) {
-//     return res.status(400).json({ message: "Email is required" });
-//   }
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
 
-//   // Generate JWT token
-//   const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" });
+  // Generate JWT token
+  const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: "1h" });
 
-//   // Send token as an HTTP-only cookie
-//   res.cookie("token", token, {
-//     httpOnly: true,
-//     secure: process.env.NODE_ENV === "production", // Use HTTPS in production
-//     sameSite: "Lax",
-//   });
+  // Send token as an HTTP-only cookie
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+    sameSite: "Lax",
+  });
 
-//   return res
-//     .status(200)
-//     .json({ message: "Token generated successfully", token });
-// });
+  return res
+    .status(200)
+    .json({ message: "Token generated successfully", token });
+});
 
 // Route for logout
-// app.post("/logout", (req, res) => {
-//   res.clearCookie("token", {
-//     httpOnly: true,
-//     secure: process.env.NODE_ENV === "production", // Use HTTPS in production
-//     sameSite: "Lax",
-//   });
+app.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+    sameSite: "Lax",
+  });
 
-//   return res.status(200).json({ message: "Logged out successfully" });
-// });
+  return res.status(200).json({ message: "Logged out successfully" });
+});
 
 // GET API for /users
 app.get("/users", (req, res) => {
@@ -98,6 +105,28 @@ app.get("/users", (req, res) => {
     }
 
     res.json({ exists: results.length > 0 });
+  });
+});
+
+// Get API for /users/:email
+// GET API for /users/:email
+app.get("/users/:email", (req, res) => {
+  const { email } = req.params;
+
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
+  const query = "SELECT user_type FROM users WHERE email = ?";
+  database.query(query, [email], (err, results) => {
+    if (err) {
+      console.error("Error fetching user type:", err);
+      return res.status(500).json({ error: "Failed to fetch user type" });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(results[0].user_type);
   });
 });
 
