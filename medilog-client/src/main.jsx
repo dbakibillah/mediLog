@@ -21,10 +21,12 @@ import {
 } from '@tanstack/react-query'
 import Dashboard from './dashboard/Dashboard';
 import Services from './pages/common/Services';
-import AllDoctors from './dashboard/admins/AllDoctors';
 import PatientDashboard from './dashboard/patients/PatientDashboard';
 import PatientAppointments from './dashboard/patients/PatientAppointments';
 import PatientMedicalRecords from './dashboard/patients/PatientMedicalRecords';
+import AdminDoctors from './dashboard/admins/AdminDoctors';
+import AdminAppointments from './dashboard/admins/AdminAppointments';
+import PatientPrescriptions from './dashboard/patients/PatientPrescriptions';
 
 
 const queryClient = new QueryClient()
@@ -70,7 +72,11 @@ const router = createBrowserRouter([
       // Admin routes
       {
         path: "/dashboard/manage-doctors",
-        element: <AllDoctors />,
+        element: <AdminDoctors />,
+      },
+      {
+        path: "/dashboard/admin-appointments",
+        element: <AdminAppointments />,
       },
       // Patients routes
       {
@@ -86,7 +92,8 @@ const router = createBrowserRouter([
         element: <PatientMedicalRecords />,
       },
       {
-        
+        path: "/dashboard/patient-prescriptions",
+        element: <PatientPrescriptions />,
       }
     ]
   }

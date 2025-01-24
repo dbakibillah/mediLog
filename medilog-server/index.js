@@ -161,7 +161,7 @@ app.post("/users", (req, res) => {
   });
 });
 
-// GET API for /doctors
+// GET API for /doctors by pagination
 app.get("/doctors", (req, res) => {
   const page = parseInt(req.query._page) || 1;
   const limit = parseInt(req.query._limit) || 10;
@@ -190,6 +190,55 @@ app.get("/doctors", (req, res) => {
         currentPage: page,
       });
     });
+  });
+});
+
+// GET API for /admin-doctors (from admin dashboard)
+app.get("/admin-doctors", (req, res) => {
+  const query = `
+      SELECT 
+          id, 
+          name, 
+          email, 
+          specialist, 
+          totalExperience, 
+          consultationFee, 
+          rating, 
+          workingIn, 
+          bmdcNumber 
+      FROM doctors
+  `;
+
+  database.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching doctors:", err);
+      return res.status(500).json({ error: "Failed to fetch doctors" });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+// DELETE API for /admin-doctors/:id (from admin dashboard)
+app.delete("/admin-doctors/:id", (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: "Doctor ID is required" });
+  }
+
+  const query = "DELETE FROM doctors WHERE id = ?";
+  database.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error deleting doctor:", err);
+      return res.status(500).json({ error: "Failed to delete doctor" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Doctor not found" });
+    }
+
+    res.status(200).json({ message: "Doctor deleted successfully" });
   });
 });
 
@@ -223,6 +272,18 @@ app.get("/medicaltests", (req, res) => {
     if (err) {
       console.error("Error fetching medical tests:", err);
       return res.status(500).json({ error: "Failed to fetch medical tests" });
+    }
+    res.json(results);
+  });
+});
+
+// GET API for /appointments(from admin dashboard)
+app.get("/appointments", (req, res) => {
+  const query = "SELECT * FROM appointments";
+  database.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching appointments:", err);
+      return res.status(500).json({ error: "Failed to fetch appointments" });
     }
     res.json(results);
   });

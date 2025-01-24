@@ -31,39 +31,72 @@ const Dashboard = () => {
     const adminLinks = (
         <li>
             <NavLink
-                to="/dashboard/manage-feedbacks"
+                to="/dashboard/admin-dashboard"
                 className={({ isActive }) =>
-                    `block px-5 py-3 rounded-lg transition-all ${
-                        isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"
+                    `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"
                     }`
                 }
             >
-                Manage Feedbacks
+                Dashboard
+            </NavLink>
+            <NavLink
+                to="/dashboard/manage-doctors"
+                className={({ isActive }) =>
+                    `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"
+                    }`
+                }
+            >
+                Doctors
+            </NavLink>
+            <NavLink
+                to="/dashboard/admin-appointments"
+                className={({ isActive }) =>
+                    `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"
+                    }`
+                }
+            >
+                Appointments
             </NavLink>
         </li>
     );
 
-    const userLinks = (
+    const patientLinks = (
         <li>
             <NavLink
-                to="/dashboard/appointments"
+                to="/dashboard/patient-dashboard"
                 className={({ isActive }) =>
-                    `block px-5 py-3 rounded-lg transition-all ${
-                        isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"
+                    `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"
+                    }`
+                }
+            >
+                Dashboard
+            </NavLink>
+            <NavLink
+                to="/dashboard/patient-appointments"
+                className={({ isActive }) =>
+                    `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"
                     }`
                 }
             >
                 Appointments
             </NavLink>
             <NavLink
-                to="/dashboard/your-feedback"
+                to="/dashboard/patient-medical-records"
                 className={({ isActive }) =>
-                    `block px-5 py-3 rounded-lg transition-all ${
-                        isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"
+                    `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"
                     }`
                 }
             >
-                Your Feedback
+                Medical Records
+            </NavLink>
+            <NavLink
+                to="/dashboard/patient-prescriptions"
+                className={({ isActive }) =>
+                    `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"
+                    }`
+                }
+            >
+                Prescriptions
             </NavLink>
         </li>
     );
@@ -74,7 +107,7 @@ const Dashboard = () => {
                 <div className="p-6">
                     <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
                     <nav>
-                        <ul className="space-y-2">{userType === "admin" ? adminLinks : userLinks}</ul>
+                        <ul className="space-y-2">{userType === "admin" ? adminLinks : patientLinks}</ul>
                     </nav>
                     <div className="divider"></div>
                     <ul className="space-y-2">
