@@ -27,6 +27,9 @@ import PatientMedicalRecords from './dashboard/patients/PatientMedicalRecords';
 import AdminDoctors from './dashboard/admins/AdminDoctors';
 import AdminAppointments from './dashboard/admins/AdminAppointments';
 import PatientPrescriptions from './dashboard/patients/PatientPrescriptions';
+import AdminPatients from './dashboard/admins/AdminPatients';
+import AdminDashboard from './dashboard/admins/AdminDashboard';
+import EditProfile from './dashboard/EditProfile';
 
 
 const queryClient = new QueryClient()
@@ -69,7 +72,16 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Dashboard />,
     children: [
+      // common routes
+      {
+        path: "/dashboard/profile",
+        element: <EditProfile />,
+      },
       // Admin routes
+      {
+        path: "/dashboard/admin-dashboard",
+        element: <AdminDashboard />,
+      },
       {
         path: "/dashboard/manage-doctors",
         element: <AdminDoctors />,
@@ -77,6 +89,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/admin-appointments",
         element: <AdminAppointments />,
+      },
+      {
+        path: "/dashboard/admin-patients",
+        element: <AdminPatients />,
       },
       // Patients routes
       {

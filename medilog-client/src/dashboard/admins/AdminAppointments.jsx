@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
-
+import SearchBar from "../../components/searchBar/SearchBar";
 const AdminAppointments = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
@@ -15,6 +15,8 @@ const AdminAppointments = () => {
             return response.data;
         },
     });
+
+    const [searchQuery, setSearchQuery] = useState("");
 
     const [openModal, setOpenModal] = useState(false);
     const [selectedAppointment, setSelectedAppointment] = useState(null);
@@ -32,13 +34,27 @@ const AdminAppointments = () => {
     // Pagination logic
     const totalItems = appointments.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
-    const paginatedData = appointments.slice(
+
+    // Filter appointments based on search query
+    const filteredAppointments = appointments.filter((appointment) =>
+        appointment.patient_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        appointment.doctor_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        appointment.disease.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Paginate filtered appointments
+    const paginatedData = filteredAppointments.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
+    };
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        setCurrentPage(1); // Reset to first page on search change
     };
 
     if (isLoading) {
@@ -57,8 +73,14 @@ const AdminAppointments = () => {
         <section className="p-6 bg-gray-100 min-h-screen">
             <div className="container mx-auto lg:px-24">
                 <h1 className="text-3xl font-bold text-gray-800 mb-6">Admin Appointments</h1>
-                {appointments.length === 0 ? (
-                    <p className="text-center text-gray-500">No appointments available.</p>
+
+                {/* Search Bar Component */}
+                <div className="mb-4 flex justify-end">
+                    <SearchBar onSearch={handleSearch} searchQuery="Search by patient, doctor or disease. . ." />
+                </div>
+
+                {filteredAppointments.length === 0 ? (
+                    <p className="text-center text-gray-500">No appointments found.</p>
                 ) : (
                     <>
                         <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">

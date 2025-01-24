@@ -2,14 +2,16 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import ReactRating from 'react-rating';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import SearchBar from '../../components/searchBar/SearchBar';
 
 const Consultation = () => {
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState(""); // State for search query
     const itemsPerPage = 8;
 
     const { data: doctorsData = {}, isLoading, isError } = useQuery(
-        ['doctors', currentPage],
+        ['doctors', currentPage], // No need to pass searchQuery here, it will be handled client-side
         async () => {
             const response = await axios.get('http://localhost:8081/doctors', {
                 params: {
@@ -22,19 +24,37 @@ const Consultation = () => {
             return response.data;
         },
         {
-            keepPreviousData: true,
+            keepPreviousData: true, // Keep previous data while fetching new data
         }
     );
 
     const doctors = Array.isArray(doctorsData.doctors) ? doctorsData.doctors : [];
-
     const totalDoctors = doctorsData.total || 0;
     const totalPages = Math.ceil(totalDoctors / itemsPerPage);
+
+    const filteredDoctors = useMemo(() => {
+        return doctors.filter((doctor) => {
+            const name = doctor.name || "";
+            const email = doctor.email || "";
+            const specialty = doctor.specialist || "";
+
+            return (
+                name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                specialty.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        });
+    }, [doctors, searchQuery]);
 
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setCurrentPage(newPage);
         }
+    };
+
+    const handleSearch = (query) => {
+        setSearchQuery(query); // Update search query when user types
+        setCurrentPage(1); // Reset to the first page when a new search is made
     };
 
     if (isLoading) {
@@ -53,11 +73,23 @@ const Consultation = () => {
         );
     }
 
+    // Pagination logic for filtered doctors
+    const indexOfLastDoctor = currentPage * itemsPerPage;
+    const indexOfFirstDoctor = indexOfLastDoctor - itemsPerPage;
+    const currentDoctors = filteredDoctors.slice(indexOfFirstDoctor, indexOfLastDoctor);
+
     return (
         <section className="container mx-auto lg:px-24 min-h-screen py-12">
-            <h1 className="text-5xl font-extrabold text-center text-blue-800 mb-12">Consult a Doctor</h1>
+            <h1 className="text-5xl font-extrabold text-center text-blue-800 mb-4">Consult a Doctor</h1>
+
+            {/* Search Bar */}
+            <div className="mb-8 flex justify-end">
+                <SearchBar onSearch={handleSearch} searchQuery="Search by name, email, or specialty..." />
+            </div>
+
+            {/* Doctor Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {doctors.map((doctor) => (
+                {currentDoctors.map((doctor) => (
                     <div
                         key={doctor.id}
                         className="bg-white shadow-md rounded-lg overflow-hidden transition-transform transform p-5 bg-gradient-to-br from-blue-50 to-indigo-50 hover:shadow-lg"
@@ -97,6 +129,7 @@ const Consultation = () => {
                 ))}
             </div>
 
+            {/* Pagination */}
             <div className="flex justify-center items-center mt-8 space-x-3">
                 <button
                     onClick={() => handlePageChange(currentPage - 1)}
@@ -106,7 +139,7 @@ const Consultation = () => {
                     Prev
                 </button>
 
-                {Array.from({ length: totalPages }, (_, index) => (
+                {Array.from({ length: Math.ceil(filteredDoctors.length / itemsPerPage) }, (_, index) => (
                     <button
                         key={index + 1}
                         className={`px-5 py-3 text-white rounded-lg shadow-md transform transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed 
@@ -122,7 +155,7 @@ const Consultation = () => {
 
                 <button
                     onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
+                    disabled={currentPage === Math.ceil(filteredDoctors.length / itemsPerPage)}
                     className="px-5 py-3 text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-md transform transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Next

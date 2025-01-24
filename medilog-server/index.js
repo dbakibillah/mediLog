@@ -89,8 +89,21 @@ app.post("/logout", (req, res) => {
   return res.status(200).json({ message: "Logged out successfully" });
 });
 
-// GET API for /users
+// GET API for users (Public)
 app.get("/users", (req, res) => {
+  const query = "SELECT * FROM users";
+  database.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching users:", err);
+      return res.status(500).json({ error: "Failed to fetch users" });
+    }
+
+    res.json(results);
+  });
+});
+
+// GET API for /users (for login authentication)
+app.get("/users-login", (req, res) => {
   const { email } = req.query;
 
   if (!email) {
@@ -108,8 +121,7 @@ app.get("/users", (req, res) => {
   });
 });
 
-// Get API for /users/:email
-// GET API for /users/:email
+// GET API for /users/:email(for user type)
 app.get("/users/:email", (req, res) => {
   const { email } = req.params;
 
@@ -130,12 +142,89 @@ app.get("/users/:email", (req, res) => {
   });
 });
 
-// POST API for /users
+// GET API for /users/:email(for user profile)
+app.get("/users-profile/:email", (req, res) => {
+  const { email } = req.params;
+
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
+  const query = "SELECT * FROM users WHERE email = ?"; // Fetch all user data
+  database.query(query, [email], (err, results) => {
+    if (err) {
+      console.error("Error fetching user data:", err);
+      return res.status(500).json({ error: "Failed to fetch user data" });
+    }
+    if (results.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json(results[0]);
+  });
+});
+
+// PUT API to update user data
+app.put("/users-profile/:email", (req, res) => {
+  const email = req.params.email;
+  const {
+    name,
+    gender,
+    date_of_birth,
+    blood_group,
+    contact_number,
+    address,
+    photo,
+    about,
+  } = req.body;
+
+  // SQL query for updating user data based on email
+  const query = `
+    UPDATE users
+    SET 
+      name = COALESCE(?, name), 
+      gender = COALESCE(?, gender), 
+      date_of_birth = COALESCE(?, date_of_birth), 
+      blood_group = COALESCE(?, blood_group), 
+      contact_number = COALESCE(?, contact_number), 
+      address = COALESCE(?, address), 
+      photo = COALESCE(?, photo), 
+      about = COALESCE(?, about)
+    WHERE email = ?
+  `;
+
+  const values = [
+    name || null,
+    gender || null,
+    date_of_birth || null,
+    blood_group || null,
+    contact_number || null,
+    address || null,
+    photo || null,
+    about || null,
+    email, // Use email in WHERE clause
+  ];
+
+  database.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error updating user:", err);
+      return res.status(500).json({ error: "Failed to update profile" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({ message: "Profile updated successfully" });
+  });
+});
+
+// POST API for /users (google register)
 app.post("/users", (req, res) => {
   const {
     name,
     email,
-    user_type = "patient",
+    photo, // Added photo to the destructured body
+    user_type = "patient", // Default user type is patient
     last_login = new Date(),
   } = req.body;
 
@@ -143,20 +232,37 @@ app.post("/users", (req, res) => {
     return res.status(400).json({ error: "Name and email are required" });
   }
 
-  const query = `
-    INSERT INTO users (name, email, user_type, last_login) 
-    VALUES (?, ?, ?, ?)
-  `;
-  const values = [name, email, user_type, last_login];
-
-  database.query(query, values, (err, result) => {
+  // Check if the email already exists
+  const checkQuery = "SELECT * FROM users WHERE email = ?";
+  database.query(checkQuery, [email], (err, results) => {
     if (err) {
-      console.error("Error inserting user:", err);
-      return res.status(500).json({ error: "Failed to register user" });
+      console.error("Error checking for existing user:", err);
+      return res
+        .status(500)
+        .json({ error: "Failed to check for existing user" });
     }
-    res.status(201).json({
-      message: "User registered successfully",
-      userId: result.insertId,
+
+    if (results.length > 0) {
+      console.log(`Conflict: User with email ${email} already exists`);
+      return res.status(409).json({ error: "Email already exists" });
+    }
+
+    // Insert user with the required fields, including photo (if available)
+    const insertQuery = `
+      INSERT INTO users (name, email, photo, user_type, last_login) 
+      VALUES (?, ?, ?, ?, ?)
+    `;
+    const values = [name, email, photo, user_type, last_login]; // Include photo in the values
+
+    database.query(insertQuery, values, (err, result) => {
+      if (err) {
+        console.error("Error inserting user:", err);
+        return res.status(500).json({ error: "Failed to register user" });
+      }
+      res.status(201).json({
+        message: "User registered successfully",
+        userId: result.insertId,
+      });
     });
   });
 });
@@ -346,6 +452,85 @@ app.post("/appointments", (req, res) => {
       message: "Appointment created successfully",
       appointmentId: result.insertId,
     });
+  });
+});
+
+// GET API for /patients(from admin dashboard)
+app.get("/patients", (req, res) => {
+  const query = `
+    SELECT user_id, name, gender, date_of_birth, blood_group, contact_number, email, address, user_type, photo, about 
+    FROM users
+    WHERE user_type = 'patient'
+  `;
+
+  database.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching patients:", err);
+      return res.status(500).json({ error: "Failed to fetch patients" });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+// DELETE API for /patients/:id (from admin dashboard)
+app.delete("/patients/:id", (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: "Patient ID is required" });
+  }
+
+  const query = "DELETE FROM users WHERE user_id = ?";
+  database.query(query, [id], (err, results) => {
+    if (err) {
+      console.error("Error deleting patient:", err);
+      return res.status(500).json({ error: "Failed to delete patient" });
+    }
+
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: "Patient not found" });
+    }
+
+    res.status(200).json({ message: "Patient deleted successfully" });
+  });
+});
+
+// GET API for /appointments(from patient dashboard)
+app.get("/appointments", (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
+  const query = "SELECT * FROM appointments WHERE patient_email = ?";
+  database.query(query, [email], (err, results) => {
+    if (err) {
+      console.error("Error fetching appointments:", err);
+      return res.status(500).json({ error: "Failed to fetch appointments" });
+    }
+
+    if (results.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No appointments found for this patient" });
+    }
+
+    // Format the date and time fields
+    const formattedResults = results.map((appointment) => {
+      return {
+        ...appointment,
+        consultation_date: new Date(
+          appointment.consultation_date
+        ).toISOString(),
+        consultation_time: new Date(
+          `1970-01-01T${appointment.consultation_time}Z`
+        ).toISOString(),
+      };
+    });
+
+    res.status(200).json(formattedResults);
   });
 });
 

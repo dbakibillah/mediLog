@@ -16,23 +16,35 @@ const Login = () => {
     const [passwordError, setPasswordError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
+    // Google Sign-In Handler
     const handleGoogleSignIn = async () => {
         try {
+            // Attempt Google Sign-In
             const result = await googleSignIn();
             const user = result.user;
-            const { email, displayName } = user;
+            const { email, displayName, photoURL } = user;
 
-            // Check if user already exists
-            const response = await axios.get(`http://localhost:8081/users?email=${email}`);
+            // Set the user to the context (AuthProvider)
+            setUser(user);
+
+            // Check if the user already exists in your database
+            const response = await axios.get(`http://localhost:8081/users-login?email=${email}`);
             if (response.data.exists) {
+                // If user exists, show a success message
                 Swal.fire({
                     title: "Success!",
                     text: "Logged in successfully with Google!",
                     icon: "success",
                 });
             } else {
-                // Register new user
-                const newUser = { name: displayName, email };
+                // If the user doesn't exist, create a new user
+                const newUser = {
+                    name: displayName || email,
+                    email,
+                    photo: photoURL, // Include the photo URL (Google Profile Picture)
+                    user_type: "patient", // Default user type is patient
+                    last_login: new Date(), // Current date as last_login
+                };
                 await axios.post("http://localhost:8081/users", newUser);
                 Swal.fire({
                     title: "Welcome!",
@@ -41,11 +53,11 @@ const Login = () => {
                 });
             }
 
-            // Set user and navigate
-            setUser(user);
+            // Redirect the user after successful login/registration
             const redirectPath = location.state?.from?.pathname || "/";
             navigate(redirectPath, { replace: true });
         } catch (err) {
+            // Handle any errors during Google sign-in
             Swal.fire({
                 title: "Error!",
                 text: err.message,
@@ -54,6 +66,7 @@ const Login = () => {
         }
     };
 
+    // Login Handler
     const handleLogin = async (event) => {
         event.preventDefault();
 
@@ -79,7 +92,7 @@ const Login = () => {
             return;
         }
 
-        setPasswordError(""); // Clear error if validation passes
+        setPasswordError("");
 
         try {
             const result = await signInUser(email, password);
