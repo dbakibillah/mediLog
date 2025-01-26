@@ -177,7 +177,6 @@ app.put("/users-profile/:email", (req, res) => {
     about,
   } = req.body;
 
-  // SQL query for updating user data based on email
   const query = `
     UPDATE users
     SET 
@@ -201,7 +200,7 @@ app.put("/users-profile/:email", (req, res) => {
     address || null,
     photo || null,
     about || null,
-    email, // Use email in WHERE clause
+    email,
   ];
 
   database.query(query, values, (err, result) => {
@@ -223,8 +222,8 @@ app.post("/users", (req, res) => {
   const {
     name,
     email,
-    photo, // Added photo to the destructured body
-    user_type = "patient", // Default user type is patient
+    photo,
+    user_type = "patient",
     last_login = new Date(),
   } = req.body;
 
@@ -232,7 +231,6 @@ app.post("/users", (req, res) => {
     return res.status(400).json({ error: "Name and email are required" });
   }
 
-  // Check if the email already exists
   const checkQuery = "SELECT * FROM users WHERE email = ?";
   database.query(checkQuery, [email], (err, results) => {
     if (err) {
@@ -247,13 +245,11 @@ app.post("/users", (req, res) => {
       return res.status(409).json({ error: "Email already exists" });
     }
 
-    // Insert user with the required fields, including photo (if available)
     const insertQuery = `
       INSERT INTO users (name, email, photo, user_type, last_login) 
       VALUES (?, ?, ?, ?, ?)
     `;
-    const values = [name, email, photo, user_type, last_login]; // Include photo in the values
-
+    const values = [name, email, photo, user_type, last_login];
     database.query(insertQuery, values, (err, result) => {
       if (err) {
         console.error("Error inserting user:", err);
@@ -296,6 +292,20 @@ app.get("/doctors", (req, res) => {
         currentPage: page,
       });
     });
+  });
+});
+
+// GET API for all doctors
+app.get("/all-doctors", (req, res) => {
+  const query = "SELECT * FROM doctors";
+
+  database.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching doctors:", err);
+      return res.status(500).json({ error: "Failed to fetch doctors" });
+    }
+
+    res.json(results);
   });
 });
 
@@ -401,6 +411,7 @@ app.post("/appointments", (req, res) => {
     patientName,
     patientEmail,
     doctorId,
+    doctorEmail,
     doctorName,
     hospitalName,
     consultationDate,
@@ -414,6 +425,7 @@ app.post("/appointments", (req, res) => {
   if (
     !patientName ||
     !doctorId ||
+    !doctorEmail ||
     !consultationDate ||
     !consultationTime ||
     !disease
@@ -424,8 +436,8 @@ app.post("/appointments", (req, res) => {
   // Query to insert the appointment into the database
   const query = `
     INSERT INTO appointments 
-      (patient_name, patient_email, doctor_id, doctor_name, hospital_name, consultation_date, consultation_time, disease, additional_notes, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (patient_name, patient_email, doctor_id, doctor_name, hospital_name, consultation_date, consultation_time, disease, additional_notes, status, doctor_email)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
   const values = [
     patientName,
@@ -433,11 +445,12 @@ app.post("/appointments", (req, res) => {
     doctorId,
     doctorName,
     hospitalName,
-    consultationDate,
-    consultationTime,
+    consultationDate, // Ensure this is a valid Date string
+    consultationTime, // Ensure this is a valid Time string
     disease,
     additionalNotes,
     status,
+    doctorEmail,
   ];
 
   // Execute the query
@@ -497,7 +510,7 @@ app.delete("/patients/:id", (req, res) => {
 });
 
 // GET API for /appointments(from patient dashboard)
-app.get("/appointments", (req, res) => {
+app.get("/users-appointments", (req, res) => {
   const { email } = req.query;
 
   if (!email) {
@@ -517,7 +530,7 @@ app.get("/appointments", (req, res) => {
         .json({ message: "No appointments found for this patient" });
     }
 
-    // Format the date and time fields
+    // Format the date and time fields (to ISO format)
     const formattedResults = results.map((appointment) => {
       return {
         ...appointment,
@@ -532,6 +545,72 @@ app.get("/appointments", (req, res) => {
 
     res.status(200).json(formattedResults);
   });
+});
+
+// GET API for /appointments(from doctor dashboard)
+app.get("/doctor-appointments", (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
+  const query = "SELECT * FROM appointments WHERE doctor_email = ?";
+  database.query(query, [email], (err, results) => {
+    if (err) {
+      console.error("Error fetching appointments:", err);
+      return res.status(500).json({ error: "Failed to fetch appointments" });
+    }
+
+    if (results.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No appointments found for this doctor" });
+    }
+
+    // Format the date and time fields (to ISO format)
+    const formattedResults = results.map((appointment) => {
+      return {
+        ...appointment,
+        consultation_date: new Date(
+          appointment.consultation_date
+        ).toISOString(),
+        consultation_time: new Date(
+          `1970-01-01T${appointment.consultation_time}Z`
+        ).toISOString(),
+      };
+    });
+
+    res.status(200).json(formattedResults);
+  });
+});
+
+// POST API for cart
+app.post("/cart", (req, res) => {
+  const { testName, price, sampleType, details, resultTime, userEmail } =
+    req.body;
+
+  if (!userEmail) {
+    return res.status(400).json({ error: "User email is required" });
+  }
+
+  // Insert the test into the cart table (assuming you have a cart table in your DB)
+  const query = `
+    INSERT INTO cart (test_name, price, sample_type, details, result_time, user_email)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  db.query(
+    query,
+    [testName, price, sampleType, details, resultTime, userEmail],
+    (error, results) => {
+      if (error) {
+        console.error("Error adding test to cart:", error);
+        return res.status(500).json({ error: "Failed to add test to cart" });
+      }
+      res.status(200).json({ message: "Test added to cart successfully!" });
+    }
+  );
 });
 
 // Start the server
