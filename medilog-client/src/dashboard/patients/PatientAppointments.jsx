@@ -6,7 +6,6 @@ import { Helmet } from "react-helmet";
 import Swal from "sweetalert2";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
-import SearchBar from "../../components/searchBar/SearchBar";
 
 const PatientAppointments = () => {
     const { user } = useContext(AuthContext);
@@ -16,6 +15,10 @@ const PatientAppointments = () => {
         consultationTime: "",
         disease: "",
         additionalNotes: "",
+        doctorId: "",
+        doctorEmail: "",
+        doctorName: "",
+        hospitalName: "",
     });
 
     // Fetch appointments
@@ -84,11 +87,24 @@ const PatientAppointments = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Ensure required fields are filled
+        if (!formData.doctorId || !formData.consultationDate || !formData.consultationTime || !formData.disease) {
+            Swal.fire({
+                title: "Error!",
+                text: "Please fill in all the required fields.",
+                icon: "error",
+                timer: 3000,
+                showConfirmButton: false,
+            });
+            return;
+        }
+
         // Prepare appointment data
         const appointmentData = {
             patientName: user.displayName,
             patientEmail: user.email,
             doctorId: formData.doctorId,
+            doctorEmail: formData.doctorEmail,
             doctorName: formData.doctorName,
             hospitalName: formData.hospitalName,
             consultationDate: formData.consultationDate,
@@ -101,9 +117,8 @@ const PatientAppointments = () => {
         try {
             // Send the data to the backend API
             const response = await axios.post("http://localhost:8081/appointments", appointmentData);
-
+            refetch();
             if (response.status === 201) {
-                refetch();
                 Swal.fire({
                     title: "Success!",
                     text: "Your appointment has been booked successfully!",
@@ -117,6 +132,10 @@ const PatientAppointments = () => {
                     consultationTime: "",
                     disease: "",
                     additionalNotes: "",
+                    doctorId: "",
+                    doctorEmail: "",
+                    doctorName: "",
+                    hospitalName: "",
                 });
             }
         } catch (error) {
@@ -251,6 +270,7 @@ const PatientAppointments = () => {
                                         ...formData,
                                         doctorId: selectedDoctor.id,
                                         doctorName: selectedDoctor.name,
+                                        doctorEmail: selectedDoctor.email,
                                         hospitalName: selectedDoctor.workingIn,
                                     });
                                 }}

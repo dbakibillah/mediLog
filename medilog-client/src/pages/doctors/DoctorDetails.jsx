@@ -55,6 +55,7 @@ const DoctorDetails = () => {
             patientName: user.displayName,
             patientEmail: user.email,
             doctorId: doctor.id,
+            doctorEmail: doctor.email,
             doctorName: doctor.name,
             hospitalName: doctor.workingIn,
             consultationDate: formData.consultationDate,
