@@ -3,6 +3,8 @@ import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../providers/AuthProviders";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { FaHome, FaNotesMedical } from "react-icons/fa";
+import { MdDashboardCustomize, MdNoteAdd } from "react-icons/md";
 
 const Dashboard = () => {
     const { user } = useContext(AuthContext);
@@ -43,9 +45,9 @@ const Dashboard = () => {
     // Links for patient user type
     const patientLinks = (
         <li>
-            <NavLink to="/dashboard/patient-dashboard" className={({ isActive }) => `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"}`}>Dashboard</NavLink>
-            <NavLink to="/dashboard/patient-appointments" className={({ isActive }) => `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"}`}>Appointments</NavLink>
-            <NavLink to="/dashboard/patient-medical-records" className={({ isActive }) => `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"}`}>Medical Records</NavLink>
+            <NavLink to="/dashboard/patient-dashboard" className={({ isActive }) => `px-5 py-3 rounded-lg transition-all flex items-center gap-2 ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"}`}><MdDashboardCustomize className="text-xl" />Dashboard</NavLink>
+            <NavLink to="/dashboard/patient-appointments" className={({ isActive }) => `px-5 py-3 rounded-lg transition-all flex items-center gap-2 ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"}`}><MdNoteAdd className="text-xl" />Appointments</NavLink>
+            <NavLink to="/dashboard/patient-medical-records" className={({ isActive }) => `px-5 py-3 rounded-lg transition-all flex items-center gap-2 ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"}`}><FaNotesMedical className="text-xl" /> Medical Records</NavLink>
             <NavLink to="/dashboard/patient-prescriptions" className={({ isActive }) => `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"}`}>Prescriptions</NavLink>
         </li>
     );
@@ -74,7 +76,7 @@ const Dashboard = () => {
                     <div className="divider"></div>
                     <ul className="space-y-2">
                         <li>
-                            <Link to="/" className="block px-5 py-3 rounded-lg transition-all hover:bg-blue-700">Home</Link>
+                            <Link to="/" className="px-5 py-3 rounded-lg transition-all hover:bg-blue-700 flex items-center gap-2"><FaHome className="text-xl" /> Home</Link>
                             <NavLink to="/dashboard/profile" className={({ isActive }) => `block px-5 py-3 rounded-lg transition-all ${isActive ? "bg-blue-800 font-semibold" : "hover:bg-blue-700"}`}>Profile</NavLink>
                         </li>
                     </ul>
